@@ -1,16 +1,21 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const extractSass = new ExtractTextPlugin({
-    filename: "style.css",
-});
+// const extractSass = new ExtractTextPlugin({
+//     filename: "style.css",
+// });
 
 module.exports = {
     entry: './index.js',
     plugins: [
         // Adding our UglifyJS plugin
         new UglifyJSPlugin(),
-        extractSass
+		// Extract CSS to own bundle, filenmae relative to output.path.
+		new MiniCssExtractPlugin({
+			filename: 'style.css', // or ../styles/[name].css for dynamic name
+			chunkFilename: '[id].css',
+		}),
     ],
     output: {
         filename: 'bundle.js',
@@ -28,32 +33,43 @@ module.exports = {
                     }
                 }
             },
-            {
-                test: /\.css$/,
-                loader: 'style-loader',
-            },
-            {
-                test: /\.css$/,
-                loader: 'css-loader',
-                options: {
-                minimize: true
-                }
-            },
-            {
-                test: /\.scss$/,
-                use: extractSass.extract({
-                    use: [{
-                        loader: "css-loader",
-                        options: {
-                            minimize: true
-                        }
-                    }, {
-                        loader: "sass-loader"
-                    }],
-                    // use style-loader in development
-                    fallback: "style-loader"
-                })
-            },
+            // {
+            //     test: /\.css$/,
+            //     loader: 'style-loader',
+            // },
+            // {
+            //     test: /\.css$/,
+            //     loader: 'css-loader',
+            //     options: {
+            //     minimize: true
+            //     }
+            // },
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+         {
+            loader: 'resolve-url-loader',
+            options: {
+              debug: true,
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [require('node-normalize-scss').includePaths],
+              sourceMap: true,
+            }
+          }
+        ]
+      },
         ]
     }
 };
