@@ -1,20 +1,16 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-// const extractSass = new ExtractTextPlugin({
-//     filename: "style.css",
-// });
 
 module.exports = {
     entry: './index.js',
     plugins: [
-        // Adding our UglifyJS plugin
-        new UglifyJSPlugin(),
-		// Extract CSS to own bundle, filenmae relative to output.path.
-		new MiniCssExtractPlugin({
-			filename: 'style.css', // or ../styles/[name].css for dynamic name
-			chunkFilename: '[id].css',
+       // Adding our UglifyJS plugin
+      new UglifyJSPlugin(),
+			// Extract CSS to own bundle, filenmae relative to output.path.
+			new MiniCssExtractPlugin({
+				filename: 'style.css', // or ../styles/[name].css for dynamic name
+				chunkFilename: '[id].css',
 		}),
     ],
     output: {
@@ -33,17 +29,6 @@ module.exports = {
                     }
                 }
             },
-            // {
-            //     test: /\.css$/,
-            //     loader: 'style-loader',
-            // },
-            // {
-            //     test: /\.css$/,
-            //     loader: 'css-loader',
-            //     options: {
-            //     minimize: true
-            //     }
-            // },
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
@@ -70,6 +55,6 @@ module.exports = {
           }
         ]
       },
-        ]
+      ]
     }
 };
