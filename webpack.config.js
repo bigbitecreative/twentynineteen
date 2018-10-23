@@ -1,6 +1,8 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+//const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin-with-rtl");
+const WebpackRTLPlugin = require("webpack-rtl-plugin");
 
 module.exports = {
     entry: './index.js',
@@ -11,7 +13,10 @@ module.exports = {
 			new MiniCssExtractPlugin({
 				filename: 'style.css', // or ../styles/[name].css for dynamic name
 				chunkFilename: '[id].css',
-		}),
+				rtlEnabled: true,
+      	rtlGlobalVar: 'pageDir',
+			}),
+			new WebpackRTLPlugin(),
     ],
     output: {
         filename: 'bundle.js',
@@ -35,6 +40,13 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
+            options: {
+              sourceMap: true,
+							minimize: false,
+            }
+          },
+          {
+            loader: 'postcss-loader',
             options: {
               sourceMap: true
             }
